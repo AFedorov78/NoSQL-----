@@ -1,0 +1,53 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  mongo-1:
+    image: mongo:latest
+    restart: always
+    hostname: mongo-1
+    container_name: mongo-1
+    networks:
+      - mongocluster
+    ports:
+      - 30001:27017
+    command: mongod --replSet comments
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    
+  mongo-2:
+    image: mongo:latest
+    restart: always
+    hostname: mongo-2
+    container_name: mongo-2
+    networks:
+      - mongocluster
+    ports:
+      - 30002:27017
+    command: mongod --replSet comments
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27018/
+
+  mongo-3:
+    image: mongo:latest
+    restart: always
+    hostname: mongo-3
+    container_name: mongo-3
+    networks:
+      - mongocluster
+    ports:
+      - 30003:27017
+    command: mongod --replSet comments
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27019/
+
+networks:
+  mongocluster:
+    driver: bridge
